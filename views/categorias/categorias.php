@@ -1,9 +1,10 @@
 <?php require_once("../layout/encabezado.php") ?>
     <div class="container-fluid">
-        <h1 class="text-center mt-4">Categorías</h1>
+        <?php require_once "../layout/nav.php" ?>
+        <h1 class="text-center my-4">Categorías</h1>
 
         <div class="row d-flex">
-            <div class="col-md-6">
+            <div class="col-md-6 mb-3">
                 <form id="agregarCategoria">
                     <div class="mb-3">
                         <label for="" class="form-label">Nombre Categoría: </label>
@@ -25,7 +26,7 @@
             </div>
 
             <div class="col-md-6">
-                <table class="table table-bordered">
+                <table class="table table-bordered" id="table_categorias">
                     <thead>
                         <tr>
                             <th>Nombre</th>

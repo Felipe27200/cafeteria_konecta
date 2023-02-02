@@ -1,4 +1,5 @@
 <?php
+namespace model\dto;
 
 class Producto 
 {

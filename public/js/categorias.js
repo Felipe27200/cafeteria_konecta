@@ -5,7 +5,8 @@ $(document).ready(function () {
 
     $("#agregarCategoria .cancelCategoria").hide();
 
-    listarCategorias();
+    if ($("#table_categorias").length > 0)
+        listarCategorias();
 
     $("#agregarCategoria .cancelCategoria").off("click");
     $("#agregarCategoria .cancelCategoria").on("click", function () {
@@ -33,12 +34,13 @@ $(document).ready(function () {
             $("#agregarCategoria .cancelCategoria").hide();
             $("#agregarCategoria")[0].reset();
 
+            editar = false;
             listarCategorias();
         });
     })
 
-    $(".table #eliminarCategoria").off("click");
-    $(".table").on("click", "#eliminarCategoria", function () {
+    $("#table_categorias #eliminarCategoria").off("click");
+    $("#table_categorias").on("click", "#eliminarCategoria", function () {
         let element = $(this).parent().parent().parent();
 
         if (confirm(`¿Desea eliminar la categoría <<< ${element.find("td").html()} >>>?`))
@@ -58,8 +60,8 @@ $(document).ready(function () {
         }
     });
 
-    $(".table #editarCategoria").off("click");
-    $(".table").on("click", "#editarCategoria", function () {
+    $("#table_categorias #editarCategoria").off("click");
+    $("#table_categorias").on("click", "#editarCategoria", function () {
         let element = $(this).parent().parent().parent();
         let id = element.attr("categoriaId");
 
@@ -109,6 +111,6 @@ function listarCategorias() {
 
         $("#categorias").html(template);
 
-        $('.table').DataTable();
+        $('#table_categorias').DataTable();
     });
 }

@@ -129,7 +129,7 @@ class CategoriaDao
 
         try
         {
-            $query = $conexion->prepare("SELECT * FROM categorias;");
+            $query = $conexion->prepare("SELECT * FROM categorias ORDER BY nombre;");
 
             $query->execute();
             

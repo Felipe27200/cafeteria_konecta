@@ -1,21 +1,18 @@
 <?php
+namespace model\dto;
 
 class Venta 
 {
     private $id;
     private $productoId;
     private $cantidad;
-    private $valorVenta;
 
     function __construct($id = "", $productoId = "", $cantidad = "", $valorVenta = "")
     {
         $this->id = $id;
         $this->productoId = $productoId;
         $this->cantidad = $cantidad;
-        $this->valorVenta = $valorVenta;
     }
-
-    
 
     /**
      * Get the value of id
@@ -73,26 +70,6 @@ class Venta
     public function setCantidad($cantidad)
     {
             $this->cantidad = $cantidad;
-
-            return $this;
-    }
-
-    /**
-     * Get the value of valorVenta
-     */ 
-    public function getValorVenta()
-    {
-            return $this->valorVenta;
-    }
-
-    /**
-     * Set the value of valorVenta
-     *
-     * @return  self
-     */ 
-    public function setValorVenta($valorVenta)
-    {
-            $this->valorVenta = $valorVenta;
 
             return $this;
     }

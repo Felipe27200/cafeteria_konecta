@@ -1,10 +1,20 @@
 <?php
+namespace model\dao;
+
+use model\dto\Producto as Producto;
+use config\Conexion as Conexion;
+use Exception;
+
+require_once "../model/dto/Producto.php";
+require_once "../config/conexion.php";
+
 
 class ProductoDao
 {
     public function registrarProducto(Producto $producto)
     {
-        $conexion = new Conexion();
+        $objectConexion = new Conexion();
+        $conexion = $objectConexion->obtenerConexion();
         $mensaje = "";
 
         try
@@ -33,7 +43,8 @@ class ProductoDao
 
     public function editarProducto(Producto $producto)
     {
-        $conexion = new Conexion();
+        $objectConexion = new Conexion();
+        $conexion = $objectConexion->obtenerConexion();
         $mensaje = "";
 
         try
@@ -62,9 +73,38 @@ class ProductoDao
         return $mensaje;
     }
 
+    public function actualizarStock(Producto $producto)
+    {
+        $objectConexion = new Conexion();
+        $conexion = $objectConexion->obtenerConexion();
+        $mensaje = "";
+
+        try
+        {
+            $query = $conexion->prepare("UPDATE productos SET stock = ? WHERE id = ?;");
+
+            $stock = $producto->getStock();
+            $id = $producto->getId();
+
+            $query->bindParam(1, $stock);
+            $query->bindParam(2, $id);
+
+            $query->execute();
+    
+            $mensaje = "true";    
+        }
+        catch (Exception $e)
+        {
+            $mensaje = $e->getMessage();
+        }
+
+        return $mensaje;
+    }
+
     public function eliminarProducto(Producto $producto)
     {
-        $conexion = new Conexion();
+        $objectConexion = new Conexion();
+        $conexion = $objectConexion->obtenerConexion();
         $mensaje = "";
 
         try
@@ -87,17 +127,38 @@ class ProductoDao
 
     public function obtenerProducto(Producto $producto)
     {
-        $conexion = new Conexion();
+        $objectConexion = new Conexion();
+        $conexion = $objectConexion->obtenerConexion();
 
         try
         {
             $query = $conexion->prepare("SELECT * FROM productos WHERE id = ?;");
-    
-            $query->bindParam(1, $producto->getId());
+
+            $id = $producto->getId();
+            
+            $query->bindParam(1, $id);
 
             $query->execute();
 
-            return $query->fetch();
+            $resultado = $query->fetchAll();
+            $json = array();
+            
+            foreach($resultado as $fila) 
+            {
+                array_push($json, 
+                    array(
+                        "id" => $fila['id'],
+                        "categoria_id" => $fila["categoria_id"],
+                        "nombre" => $fila["nombre"],
+                        "referencia" => $fila["referencia"],
+                        "precio" => $fila["precio"],
+                        "peso" => $fila["peso"],
+                        "stock" => $fila["stock"],
+                        "fecha_creacion" => $fila["fecha_creacion"],
+                    ));
+            }
+
+            return json_encode($json);
         }
         catch (Exception $e)
         {
@@ -107,15 +168,34 @@ class ProductoDao
 
     public function listarProductos()
     {
-        $conexion = new Conexion();
+        $objectConexion = new Conexion();
+        $conexion = $objectConexion->obtenerConexion();
 
         try
         {
-            $query = $conexion->prepare("SELECT * FROM productos;");
+            $query = $conexion->prepare("SELECT p.*, c.nombre as nombre_categoria FROM productos p INNER JOIN categorias c ON c.id = p.categoria_id;");
 
             $query->execute();
 
-            return $query->fetchAll();
+            $resultado = $query->fetchAll();
+            $json = array();
+            
+            foreach($resultado as $fila) 
+            {
+                array_push($json, 
+                    array(
+                        "id" => $fila['id'],
+                        "categoria_id" => $fila["nombre_categoria"],
+                        "nombre" => $fila["nombre"],
+                        "referencia" => $fila["referencia"],
+                        "precio" => $fila["precio"],
+                        "peso" => $fila["peso"],
+                        "stock" => $fila["stock"],
+                        "fecha_creacion" => $fila["fecha_creacion"],
+                    ));
+            }
+
+            return json_encode($json);
         }
         catch (Exception $e)
         {
